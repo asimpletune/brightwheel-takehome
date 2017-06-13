@@ -1,23 +1,25 @@
+import emailConfig from '../config/email-configuration'
 import express from 'express';
 const router = express.Router();
 
+
 /* Validate input */
 /*
-  1. Has "to", "to_name", "from", "from_name", "subject", "body" fields
-  2. Test email address are valid (according to MDN https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/email)
+  1. Test presence of fields according to email config
+  2. Validate "to" and "from" fields according to email config
 */
 router.post('/', (req, res, next) => {
   // 1.
-  if(!(req.body["to"] && req.body["to_name"] && req.body["from"] && req.body["from_name"] && req.body["subject"] && req.body["body"])) {
-    res.status(400).end()
+  if(!(emailConfig.validate.fields(req.body))) {
+    res.status(400).send(`Missing fields!`)
   }
   // 2. (to field)
-  if(!/^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/.test(req.body.to)) {
-    res.status(401).end()
+  if(!emailConfig.validate.to(req.body.to)) {
+    res.status(400).send(`Malformed "to" field!`)
   }
   // 2. (from field)
-  if(!/^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/.test(req.body.from)) {
-    res.status(402).end()
+  if(!emailConfig.validate.to(req.body.from)) {
+    res.status(400).send(`Malformed "from" field!`)
   }
   next()
 });
