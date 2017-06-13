@@ -1,4 +1,5 @@
 import emailConfig from '../config/email-configuration'
+import escape from 'escape-html'
 import express from 'express';
 const router = express.Router();
 
@@ -24,8 +25,16 @@ router.post('/', (req, res, next) => {
   next()
 });
 
-/* POST email */
+/* Escape keys according to email config */
 router.post('/', (req, res, next) => {
+  emailConfig.escape.forEach((field) => {
+    req.body[field] = escape(req.body[field])
+  })
+  next()
+})
+
+/* POST email */
+router.post('/', (req, res, next) => {  
   res.end()
 });
 
