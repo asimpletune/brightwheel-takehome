@@ -1,3 +1,5 @@
+import mailgun from './mailgun/settings'
+let defaultProvider = mailgun
 export default {
   "validate": {
     "fields": function(body) {
@@ -10,5 +12,7 @@ export default {
       return /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/.test(address)
     }
   },
-  "escape": ["to_name", "from_name", "subject", "body"]
+  "escape": ["to_name", "from_name", "subject", "body"],
+  "endpoint": defaultProvider.endpoint,
+  "auth": defaultProvider.auth
 }

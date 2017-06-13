@@ -1,0 +1,7 @@
+{
+  "auth": {
+    "user": "<CHANGE ME>",
+    "password": "<CHANGE ME>"
+  },
+  "endpoint": "<CHANGE ME>"
+}

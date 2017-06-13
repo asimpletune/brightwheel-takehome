@@ -1,6 +1,9 @@
-import emailConfig from '../config/email-configuration'
+import emailConfig from '../config/email.config'
+import mailgun from '../config/mailgun/settings'
 import escape from 'escape-html'
-import express from 'express';
+import unescape from 'unescape'
+import request from 'request'
+import express from 'express'
 const router = express.Router();
 
 
@@ -34,8 +37,27 @@ router.post('/', (req, res, next) => {
 })
 
 /* POST email */
-router.post('/', (req, res, next) => {  
-  res.end()
+router.post('/', (req, res, next) => {
+  request(
+    {
+      "auth": emailConfig.auth,
+      "method": 'POST',
+      "uri": emailConfig.endpoint,
+      "form": {
+        "from": req.body.from,
+        "to": req.body.to,
+        "subject": unescape(req.body.subject),
+        "html": unescape(req.body.body)
+      }
+    },
+    function (error, response, body) {
+      if(response.statusCode != 200){
+        console.error('error: '+ response.statusCode)
+      } else {
+        res.end()
+      }
+    }
+  )
 });
 
 function guard(expression, callback) {
